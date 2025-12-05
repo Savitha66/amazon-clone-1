@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Sign in — Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    main{ padding:24px; max-width:520px; margin:0 auto; }
+    label{ display:block; margin-top:12px; color:#eaf2ff; font-weight:600; }
+    input{ width:100%; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:#eaf2ff; }
+    .submit{ margin-top:12px; background:var(--accent); color:var(--accent-contrast); border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; }
+    .muted{ color:#9fb2c9; font-size:14px; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Sign in</h1>
+    <form id="signinForm" autocomplete="on">
+      <label for="email">Email or mobile phone number</label>
+      <input id="email" name="email" type="email" required placeholder="you@example.com">
+
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required placeholder="Enter password">
+
+      <button type="submit" class="submit">Sign in</button>
+      <div class="muted">This is a demo sign-in — your info stays in your browser only.</div>
+    </form>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script>
+    const toastEl = document.getElementById('toast');
+    function showToast(text, timeout=2000) {
+      toastEl.textContent = text; toastEl.hidden = false; requestAnimationFrame(()=>toastEl.classList.add('show'));
+      setTimeout(()=> { toastEl.classList.remove('show'); setTimeout(()=> toastEl.hidden = true, 180); }, timeout);
+    }
+
+    document.getElementById('signinForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      // demo: store user
+      localStorage.setItem('demo_user', JSON.stringify({ email }));
+      showToast('Signed in as ' + email);
+      setTimeout(()=> location.href = 'index.html', 900);
+    });
+
+    // prefill if exists
+    const existing = JSON.parse(localStorage.getItem('demo_user')||'null');
+    if (existing && existing.email) document.getElementById('email').value = existing.email;
+  </script>
+</body>
+</html>

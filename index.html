@@ -1,192 +1,178 @@
-<!-- content delivery network =cdn -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amazon clone</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amazon clone — demo</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" 
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="navbar">
-            <div class="navlogo border">
-                <div class="logo"></div>
-            </div>
-            <div class="navaddress border">
-                <p class="add1">Deliver</p>
-                <div class="addicon">
-                    <i class="fa-solid fa-location-dot"></i> 
-                    <p class="add2">India</p>
-                </div>
-            </div>
-            <div class="navsearch">
-                <select class="searsele">
-                    <option>All</option>
-                </select>
-                <input placeholder="Search Amazon" class="searchinput">
-                <div class="searchicon">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </div>
-            </div>
-            <div class="navsignin border">
-                <p><span>Hello ,Sign in</span></p>
-                <p class="navsecond">Accounts & Lists</p>
-            </div>
-            <div class="navreturn border">
-                <p><span>Returns</span></p>
-                <p class="navsecond">& Orders</p>
-            </div>
-            <div class="navcart border">
-                <i class="fa-solid fa-cart-shopping"></i>
-                Cart
-            </div>
-        </div>
+  <header class="navbar" role="banner">
+    <div class="container">
+      <div class="navlogo" id="homeBtn" title="Home" role="button" tabindex="0">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-text">Savitha's Store</div>
+      </div>
 
-        <div class="panel ">
-            <div class="panelall border">
-                <i class="fa-solid fa-bars"></i>
-                All
-            </div>
-            <div class="panelops ">
-                <p class="border">Today's Deals</p>
-                <p class="border">Customer Service</p>
-                <p class="border">Registry</p>
-                <p class="border">Gift Cards</p>
-                <p class="border">Sell</p>
-            </div>
-            <div class="paneldeals border">
-                Shop deals in Electronics
-            </div>
-        </div>
-        
-    </header>
-    <div class="hero">
-        <div class="heromsg">
-            <p>You are now on amazon.com. You can also shop on Amazon India for millions of products with fast local delivery. <a>Click here to go to amazon.in</a></p>
-        </div>
+      <div class="navsearch" role="search">
+        <select class="searselec" aria-label="Category select">
+          <option value="all">All</option>
+          <option value="clothes">Clothes</option>
+          <option value="mens-fashion">Men's Grooming</option>
+          <option value="furniture">Furniture</option>
+          <option value="phones">Mobile Phones</option>
+          <option value="cosmetics">Cosmetics</option>
+        </select>
 
+        <input class="searchinput" type="search" placeholder="Search Amazon — try 'phones' or 'clothes'" aria-label="Search products">
+        <button class="searchicon" aria-label="Search button"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+
+      <div class="nav-actions" aria-hidden="false">
+        <button class="btn" id="signinBtn" title="Sign in" aria-label="Sign in button">
+          <i class="fa-regular fa-user"></i>
+          <span class="small">Hello,</span><span class="nav-second">Sign in</span>
+        </button>
+
+        <button class="btn" id="ordersBtn" title="Orders" aria-label="Orders button">
+          <i class="fa-solid fa-box-archive"></i>
+          <span class="small">Returns</span><span class="nav-second">& Orders</span>
+        </button>
+
+        <div id="cartWrap" class="cart-wrap" aria-live="polite">
+          <button id="cartBtn" class="btn" aria-haspopup="true" aria-expanded="false" title="Cart">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="cart-text">Cart</span>
+            <span id="cartCount" class="cart-count" aria-hidden="true">0</span>
+          </button>
+          <!-- floating preview -->
+          <div id="cartPreview" class="cart-preview" role="region" aria-label="Cart preview" hidden>
+            <div id="previewList" class="preview-list">Your cart is empty.</div>
+            <div class="preview-actions">
+              <button id="goToCart" class="preview-btn">View cart</button>
+              <button id="checkoutNow" class="preview-btn accent">Checkout</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="shop">
-        <div class="box1 box">
-            <div class="boxcontent">
-
-                <h2>Clothes</h2>
-                <div class="boximg" style="background-image: url('box1_image.jpg');"></div>
-                <p>See more</p>
-            </div>
+    <div class="panel">
+      <div class="container">
+        <div class="panelall" id="panelAll" role="button" tabindex="0"><i class="fa-solid fa-bars"></i> All</div>
+        <div class="panelops" id="panelOps" aria-hidden="false">
+          <p>Today's Deals</p>
+          <p>Customer Service</p>
+          <p>Registry</p>
+          <p>Gift Cards</p>
+          <p>Sell</p>
         </div>
-        <div class="box2 box">
-            
-            <div class="boxcontent">
-
-                <h2>Men's Fashion</h2>
-                <div class="boximg" style="background-image: url('box2_image.jpg');"></div>
-                <p>See more</p>
-            </div>
-        </div>
-        <div class="box3 box">
-            <div class="boxcontent">
-
-                <h2>Furniture</h2>
-                <div class="boximg" style="background-image: url('box3_image.jpg');"></div>
-                <p>See more</p>
-            </div>
-            
-        </div>
-        <div class="box4 box">
-            <div class="boxcontent">
-
-                <h2>Mobile Phones</h2>
-                <div class="boximg" style="background-image: url('box4_image.jpg');"></div>
-                <p>See more</p>
-            </div>
-        </div>
-        <div class="box1 box">
-            <div class="boxcontent">
-
-                <h2>Cosmetics</h2>
-                <div class="boximg" style="background-image: url('box5_image.jpg');"></div>
-                <p>See more</p>
-            </div>
-        </div>
-        <div class="box2 box">
-            
-            <div class="boxcontent">
-
-                <h2>Pet's Food</h2>
-                <div class="boximg" style="background-image: url('box6_image.jpg');"></div>
-                <p>See more</p>
-            </div>
-        </div>
-        <div class="box3 box">
-            <div class="boxcontent">
-
-                <h2>Travel Accessories</h2>
-                <div class="boximg" style="background-image: url('box7_image.jpg');"></div>
-                <p>See more</p>
-            </div>
-            
-        </div>
-        <div class="box4 box">
-            <div class="boxcontent">
-
-                <h2>Women's Clothing</h2>
-                <div class="boximg" style="background-image: url('box8_image.jpg');"></div>
-                <p>See more</p>
-            </div>
-        </div>
+        <div class="paneldeals" id="dealsBtn" role="button">Shop deals in Electronics</div>
+      </div>
     </div>
-    <footer>
-        <div class="footpanel1">
-            Back to Top
-        </div>
-        <div class="footpanel2">
-            <ul>
-                <p>Get to Know Us</p>
-                <a>Careers</a>
-                <a>Blog</a>
-                <a>About amazon</a>
-                <a>Investor Relations</a>
-                <a>Amazon Devices</a>
-                <a>Amazon Science</a>
-            </ul>
-            <ul>
-                <p>Get to Know Us</p>
-                <a>Careers</a>
-                <a>Blog</a>
-                <a>About amazon</a>
-                <a>Investor Relations</a>
-                <a>Amazon Devices</a>
-                <a>Amazon Science</a>
-            </ul>
-            <ul>
-                <p>Get to Know Us</p>
-                <a>Careers</a>
-                <a>Blog</a>
-                <a>About amazon</a>
-                <a>Investor Relations</a>
-                <a>Amazon Devices</a>
-                <a>Amazon Science</a>
-            </ul>
-        </div>
-        <div class="footpanel3">
-            <div class="logo"></div>
-        </div>
+  </header>
 
-        <div class="footpanel4">
-           <div class="pages">
-            <a>Conditions of Use</a>
-            <a>Privacy Notice</a>
-            <a>Your Ads privacy Choices</a>
-           </div> 
-           <div class="copyright">
-            &#169; 1996-2024. Amazon.com, Inc. or its affiliates 
-           </div>
-        </div>
-    </footer>
-    <script src="script.js"></script>
+  <main>
+    <div class="hero" role="img" aria-label="Hero banner">
+      <div class="heromsg container">
+        <p>You are browsing a demo store built by Savitha. All interactions are client-side — add items to try the cart. <a id="goIndia" href="https://www.amazon.in" target="_blank" rel="noopener">Visit Amazon India</a></p>
+      </div>
+    </div>
+
+    <section class="shop container" aria-label="Product categories">
+      <!-- Boxes mapped to your uploaded images -->
+      <div class="box" data-id="clothes" data-title="Clothes" tabindex="0">
+        <h2>Clothes</h2>
+        <div class="boximg" style="background-image: url('box1_image.jpg');" role="img" aria-label="Clothes"></div>
+        <p class="see-more">See more</p>
+      </div>
+
+      <div class="box" data-id="mens-fashion" data-title="Men's Grooming" tabindex="0">
+        <h2>Men's Grooming</h2>
+        <div class="boximg" style="background-image: url('box2_image.jpg');" role="img" aria-label="Men's Grooming"></div>
+        <p class="see-more">See more</p>
+      </div>
+
+      <div class="box" data-id="furniture" data-title="Furniture" tabindex="0">
+        <h2>Furniture</h2>
+        <div class="boximg" style="background-image: url('box3_image.jpg');" role="img" aria-label="Furniture"></div>
+        <p class="see-more">See more</p>
+      </div>
+
+      <div class="box" data-id="phones" data-title="Mobile Phones" tabindex="0">
+        <h2>Mobile Phones</h2>
+        <div class="boximg" style="background-image: url('box4_image.jpg');" role="img" aria-label="Mobile Phones"></div>
+        <p class="see-more">See more</p>
+      </div>
+
+      <div class="box" data-id="cosmetics" data-title="Cosmetics" tabindex="0">
+        <h2>Cosmetics</h2>
+        <div class="boximg" style="background-image: url('box5_image.jpg');" role="img" aria-label="Cosmetics"></div>
+        <p class="see-more">See more</p>
+      </div>
+
+      <div class="box" data-id="pets" data-title="Pet Food" tabindex="0">
+        <h2>Pet's Food</h2>
+        <div class="boximg" style="background-image: url('box6_image.jpg');" role="img" aria-label="Pet Food"></div>
+        <p class="see-more">See more</p>
+      </div>
+
+      <div class="box" data-id="travel" data-title="Travel & Toys" tabindex="0">
+        <h2>Travel & Toys</h2>
+        <div class="boximg" style="background-image: url('box7_image.jpg');" role="img" aria-label="Travel and Toys"></div>
+        <p class="see-more">See more</p>
+      </div>
+
+      <div class="box" data-id="womens" data-title="Women's Clothing" tabindex="0">
+        <h2>Women's Clothing</h2>
+        <div class="boximg" style="background-image: url('box8_image.jpg');" role="img" aria-label="Women's Clothing"></div>
+        <p class="see-more">See more</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footpanel1 container" id="backToTop">Back to Top</div>
+    <div class="footpanel2 container">
+      <ul>
+        <p>Get to Know Us</p>
+        <a href="#">Careers</a>
+        <a href="#">Blog</a>
+        <a href="#">About</a>
+      </ul>
+      <ul>
+        <p>Make Money with Us</p>
+        <a href="#">Sell</a>
+        <a href="#">Advertise</a>
+      </ul>
+      <ul>
+        <p>Let Us Help You</p>
+        <a href="#">Returns</a>
+        <a href="#">Help</a>
+      </ul>
+    </div>
+    <div class="footpanel4 container">
+      <div class="pages">
+        <a href="#">Conditions of Use</a>
+        <a href="#">Privacy Notice</a>
+        <a href="#">Your Ads privacy Choices</a>
+      </div>
+      <div class="copyright">&#169; 1996-2025. Demo site by Sinchana</div>
+    </div>
+  </footer>
+
+  <!-- toast container -->
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="script.js"></script>
 </body>
 </html>

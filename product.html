@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Product — Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    main{ padding:24px; max-width:1100px; margin:0 auto; }
+    #productWrapper{ display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start; }
+    #productImage{ width:460px; max-width:100%; border-radius:12px; }
+    #productDetails{ flex:1; min-width:260px; }
+    .thumbs{ display:flex; gap:8px; margin-bottom:12px; }
+    .thumbs img{ width:64px; height:48px; object-fit:cover; border-radius:8px; cursor:pointer; border:2px solid transparent; }
+    .thumbs img.active{ border-color:rgba(255,184,107,0.9); }
+    .product-price{ font-size:22px; font-weight:800; color:#fff; margin:10px 0; }
+    .qty{ width:80px; padding:8px; border-radius:8px; }
+    .actions{ display:flex; gap:10px; margin-top:16px; }
+    .btn-ghost{ background:transparent; border:1px solid rgba(255,255,255,0.06); padding:10px 12px; border-radius:10px; color:#eaf2ff; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <header style="background:#081018;padding:12px;">
+    <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px">
+      <a href="index.html" style="color:#fff;text-decoration:none;font-weight:700">◀ Back</a>
+    </div>
+  </header>
+
+  <main>
+    <h1 id="productTitle">Demo Product</h1>
+    <div id="productWrapper">
+      <div>
+        <img id="productImage" src="box4_image.jpg" alt="product image">
+        <div class="thumbs" id="thumbs"></div>
+      </div>
+
+      <div id="productDetails">
+        <p id="productDesc">Product description goes here. This is a client-side demo product page that maps IDs to demo images.</p>
+        <div class="product-price" id="productPrice">₹999</div>
+
+        <label for="qty">Quantity</label><br>
+        <input id="qty" type="number" min="1" value="1" class="qty"><br>
+
+        <div class="actions">
+          <button id="addCart" class="btn-ghost" title="Add to cart">Add to cart</button>
+          <button id="buyNow" class="btn-ghost" title="Buy now">Buy now</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // product logic: maps keywords to images
+    const idToImage = {
+      'clothes':'box1_image.jpg',
+      'mens-fashion':'box2_image.jpg',
+      'furniture':'box3_image.jpg',
+      'phones':'box4_image.jpg',
+      'cosmetics':'box5_image.jpg',
+      'pets':'box6_image.jpg',
+      'travel':'box7_image.jpg',
+      'womens':'box8_image.jpg',
+      'deals':'box4_image.jpg'
+    };
+
+    const params = new URLSearchParams(location.search);
+    const rawId = (params.get('id') || 'Demo Product').toLowerCase();
+    const id = decodeURIComponent(rawId);
+    const title = id.replace(/[-_]/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+
+    document.getElementById('productTitle').textContent = title === 'Demo Product' ? 'Demo Product' : title;
+    document.getElementById('productDesc').textContent = 'Description for ' + document.getElementById('productTitle').textContent + '. This is a demo product page.';
+
+    // choose image
+    let chosen = 'box4_image.jpg';
+    Object.keys(idToImage).forEach(k => { if (id.includes(k)) chosen = idToImage[k]; });
+    const productImage = document.getElementById('productImage');
+    productImage.src = chosen;
+
+    // thumbnails (demo uses same pattern)
+    const thumbs = document.getElementById('thumbs');
+    ['box4_image.jpg','box1_image.jpg','box2_image.jpg','box3_image.jpg'].forEach((img, i) => {
+      const im = document.createElement('img'); im.src = img; if (img===chosen) im.classList.add('active');
+      im.addEventListener('click', ()=> { productImage.src = img; thumbs.querySelectorAll('img').forEach(t=>t.classList.remove('active')); im.classList.add('active'); });
+      thumbs.appendChild(im);
+    });
+
+    // cart handlers using global helper
+    document.getElementById('addCart').addEventListener('click', ()=> {
+      const qty = Math.max(1, parseInt(document.getElementById('qty').value || '1', 10));
+      const item = { id: id, title: document.getElementById('productTitle').textContent, qty: qty, price: 999, img: productImage.src };
+      // use global function defined in script.js
+      if (window.__demoAddToCart) {
+        window.__demoAddToCart(item);
+        // small animation
+        document.getElementById('addCart').textContent = 'Added ✓';
+        setTimeout(()=> document.getElementById('addCart').textContent = 'Add to cart', 1200);
+      } else {
+        // fallback: localStorage only
+        const cart = JSON.parse(localStorage.getItem('demo_cart')||'[]'); cart.push(item); localStorage.setItem('demo_cart', JSON.stringify(cart));
+        alert('Added to cart (fallback).');
+      }
+    });
+
+    document.getElementById('buyNow').addEventListener('click', ()=> {
+      const cart = JSON.parse(localStorage.getItem('demo_cart')||'[]');
+      if (cart.length === 0) {
+        alert('Please add an item to cart first. You will be redirected to sign in for demo checkout.');
+        location.href = 'signin.html';
+      } else {
+        location.href = 'signin.html';
+      }
+    });
+
+    // update cart preview if present
+    if (window.__renderCartUI) window.__renderCartUI();
+  </script>
+</body>
+</html>

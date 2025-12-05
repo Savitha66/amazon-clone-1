@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Cart — Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    main{ padding:24px; max-width:1100px; margin:0 auto; }
+    .cart-list{ display:flex; flex-direction:column; gap:12px; }
+    .cart-item{ display:flex; gap:12px; align-items:center; padding:12px; background: rgba(255,255,255,0.02); border-radius:10px; }
+    .cart-item img{ width:120px; height:80px; object-fit:cover; border-radius:8px; }
+    .muted{ color:#9fb2c9; font-size:14px; }
+    .total-panel{ margin-top:16px; padding:14px; background: rgba(255,255,255,0.02); border-radius:10px; display:flex; justify-content:space-between; align-items:center; }
+    .removeBtn{ background:transparent; border:1px solid rgba(255,255,255,0.04); padding:6px 8px; border-radius:8px; cursor:pointer; color:#eaf2ff; }
+    .checkoutBtn{ background:var(--accent); color:var(--accent-contrast); padding:10px 14px; border-radius:10px; border:none; font-weight:700; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <header style="background:#081018;padding:12px;">
+    <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px">
+      <a href="index.html" style="color:#fff;text-decoration:none;font-weight:700">◀ Continue shopping</a>
+    </div>
+  </header>
+
+  <main>
+    <h1>Your Cart</h1>
+    <div id="cartContents"></div>
+  </main>
+
+  <script>
+    function escapeHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function renderCartPage() {
+      const cart = JSON.parse(localStorage.getItem('demo_cart')||'[]');
+      const el = document.getElementById('cartContents');
+      el.innerHTML = '';
+      if (cart.length === 0) { el.innerHTML = '<p>Your cart is empty.</p>'; if (window.__renderCartUI) window.__renderCartUI(); return; }
+
+      const list = document.createElement('div'); list.className = 'cart-list';
+      cart.forEach((item, idx) => {
+        const ci = document.createElement('div'); ci.className = 'cart-item';
+        ci.innerHTML = `
+          <img src="${item.img || 'box4_image.jpg'}" alt="${escapeHtml(item.title)}">
+          <div style="flex:1">
+            <div style="font-weight:700;color:#fff">${escapeHtml(item.title)}</div>
+            <div class="muted">Price: ₹${item.price}</div>
+            <div style="margin-top:8px;">
+              Qty: <input type="number" min="1" value="${item.qty}" data-idx="${idx}" class="qtyInput" style="width:70px;padding:6px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#eaf2ff">
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:700">₹${item.price * item.qty}</div>
+            <button class="removeBtn" data-idx="${idx}">Remove</button>
+          </div>
+        `;
+        list.appendChild(ci);
+      });
+      el.appendChild(list);
+
+      // total
+      const total = cart.reduce((s,i)=> s + (i.price * (i.qty||1)), 0);
+      const totalPanel = document.createElement('div'); totalPanel.className = 'total-panel';
+      totalPanel.innerHTML = `<div><div class="muted">Subtotal</div><div style="font-weight:800;font-size:18px">₹${total}</div></div>
+        <div><button id="checkoutBtn" class="checkoutBtn">Proceed to checkout</button></div>`;
+      el.appendChild(totalPanel);
+
+      // handlers
+      document.querySelectorAll('.removeBtn').forEach(b => b.addEventListener('click', (e)=> {
+        const idx = parseInt(e.target.dataset.idx,10);
+        cart.splice(idx,1); localStorage.setItem('demo_cart', JSON.stringify(cart)); renderCartPage(); if (window.__renderCartUI) window.__renderCartUI();
+      }));
+      document.querySelectorAll('.qtyInput').forEach(inp => inp.addEventListener('change', (e)=> {
+        const idx = parseInt(e.target.dataset.idx,10);
+        const v = Math.max(1, parseInt(e.target.value||'1',10)); cart[idx].qty = v; localStorage.setItem('demo_cart', JSON.stringify(cart)); renderCartPage(); if (window.__renderCartUI) window.__renderCartUI();
+      }));
+
+      document.getElementById('checkoutBtn').addEventListener('click', ()=> {
+        if (cart.length === 0) alert('Cart empty');
+        else location.href = 'signin.html';
+      });
+    }
+
+    // initial render
+    renderCartPage();
+  </script>
+</body>
+</html>
